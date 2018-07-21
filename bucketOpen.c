@@ -49,8 +49,8 @@ void bucketSort(int *vet,int tam){
 
 int main(int argc, char const *argv[])
 {
-	  int *vet1,*vet2,*vet3;
-	  int i, tam;
+    int *vet1,*vet2,*vet3;
+    int i, tam;
     clock_t t, end;
     double cpu_time_used;
 
@@ -76,5 +76,5 @@ int main(int argc, char const *argv[])
     //free(vet2);
     //free(vet3);
 
-	  return 0;
+    return 0;
 }
