@@ -113,21 +113,22 @@ int main(int argc, char const *argv[])
   for(i = 0; i < tam; ++i){
    #pragma omp parallel for num_threads(numThreads)
    for (j = 0; j < numThreads - 1; ++j) {
-    if(vet1[i] <= balde[j].max && vet1[i] >= balde[j].min){
-	     insereNoBalde(&balde[j], vet1[i]);
-	    }
-     }
-   }
+    if(vet1[i] <= balde[j].max && vet1[i] >= balde[j].min)
+       insereNoBalde(&balde[j], vet1[i]);
+    }
+  }
 	
    for (i = 0; i < numThreads; ++i) {
-       insertionSort(balde[i].vet, balde[i].tam);
+     insertionSort(balde[i].vet, balde[i].tam);
    }
+	
    int *r = (int*) malloc(sizeof(int) * tam);
    int cont = 0;
+	
    for (i = 0; i < numThreads; ++i) {
      for (j = 0; j < balde[i].tam; ++j) {
-	     r[cont++] = balde[i].vet[j];
-    }
+	  r[cont++] = balde[i].vet[j];
+     }
    }
 	 
    exibevetor(r,tam); 
