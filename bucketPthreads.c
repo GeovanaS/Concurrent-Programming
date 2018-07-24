@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include <omp.h>
 #include <pthread.h>
 
 typedef struct bucket{
