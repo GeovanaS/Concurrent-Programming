@@ -148,22 +148,20 @@ int main(int argc, char const *argv[])
       }
    }
   }
-   int *r = (int*) malloc(sizeof(int) * tam);
+	
    int cont = 0;
    for (i = 0; i < numThreads; ++i) {
      for (j = 0; j < balde[i].tam; ++j) {
-	     r[cont++] = balde[i].vet[j];
+	     vet1[cont++] = balde[i].vet[j];
     }
    }
 	 
-   exibevetor(r,tam); 
+   exibevetor(vet1,tam); 
 
    t = clock(); 
    
    cpu_time_used = ((double)t)/CLOCKS_PER_SEC;
    printf("\nTempo de execução: %f\n", cpu_time_used);
-
-   free(r);
   
    return 0;
 }
