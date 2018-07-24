@@ -90,9 +90,9 @@ int main(int argc, char const *argv[])
      exit(1);
   }
    
-  int tam = atoi(argv[1]);
-  int numThreads = atoi(argv[2]);
-  int *vet1 = geraVetor(tam,&min,&max);
+  int tam = atoi(argv[1]); //recebe o tamanho do vetor como argumento na linha de comando
+  int numThreads = atoi(argv[2]);  //recebe o numero de threads como argumento na linha de comando
+  int *vet1 = geraVetor(tam,&min,&max); //gera o vetor com valores pseudo-aleatorio
   //exibevetor(vet1,tam);
 
   Balde balde[numThreads];
@@ -102,7 +102,8 @@ int main(int argc, char const *argv[])
 	balde[0].max = min + range;
 	balde[0].vet = (int*) malloc(sizeof(int) * tam);
 	balde[0].tam = 0;
-
+  
+ /* Inicializa o vetor de baldes */
   for(i = 1; i < numThreads - 1; ++i) {
       balde[i].min = balde[i - 1].max + 1;
       balde[i].max = balde[i].min + range;
@@ -111,33 +112,34 @@ int main(int argc, char const *argv[])
   }
 
   for(i = 0; i < tam; ++i){
+  /* Define o numero de threads e a região do for como paralela */
    #pragma omp parallel for num_threads(numThreads)
    for (j = 0; j < numThreads - 1; ++j) {
     if(vet1[i] <= balde[j].max && vet1[i] >= balde[j].min)
-       insereNoBalde(&balde[j], vet1[i]);
+       insereNoBalde(&balde[j], vet1[i]); //insere cada elemento em um balde
     }
   }
 	
    for (i = 0; i < numThreads; ++i) {
-     insertionSort(balde[i].vet, balde[i].tam);
+     if(balde[i].tam!=0){ 
+        insertionSort(balde[i].vet, balde[i].tam); //ordena todos os baldes nao vazios
+     }
    }
 	
-   int *r = (int*) malloc(sizeof(int) * tam);
    int cont = 0;
 	
    for (i = 0; i < numThreads; ++i) {
      for (j = 0; j < balde[i].tam; ++j) {
-	  r[cont++] = balde[i].vet[j];
+	  vet1[cont++] = balde[i].vet[j]; //coloca os elementos que estavam no balde de volta ao vetor original
      }
    }
 	 
-   exibevetor(r,tam); 
+   exibevetor(vet1,tam); 
 
    t = clock(); 
    
    cpu_time_used = ((double)t)/CLOCKS_PER_SEC;
    printf("\nTempo de execução: %f\n", cpu_time_used);
-   free(r);
   
    return 0;
 }
