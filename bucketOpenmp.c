@@ -110,15 +110,15 @@ int main(int argc, char const *argv[])
       balde[i].tam = 0;
   }
 
-  for(i = 0; i < tam; ++i) {
+  for(i = 0; i < tam; ++i){
+   #pragma omp parallel for num_threads(numThreads)
    for (j = 0; j < numThreads - 1; ++j) {
     if(vet1[i] <= balde[j].max && vet1[i] >= balde[j].min){
 	     insereNoBalde(&balde[j], vet1[i]);
 	    }
      }
    }
-
-   #pragma omp parallel for num_threads(numThreads)
+	
    for (i = 0; i < numThreads; ++i) {
        insertionSort(balde[i].vet, balde[i].tam);
    }
@@ -136,6 +136,7 @@ int main(int argc, char const *argv[])
    
    cpu_time_used = ((double)t)/CLOCKS_PER_SEC;
    printf("\nTempo de execução: %f\n", cpu_time_used);
+   free(r);
   
    return 0;
 }
