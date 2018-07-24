@@ -88,14 +88,14 @@ int main(int argc, char const *argv[])
   if (argc != 3) {
      fprintf(stderr, "Digite: [tamanho do vetor] [numero de threads]\n");
      exit(1);
- }
+  }
    
   int tam = atoi(argv[1]);
   int numThreads = atoi(argv[2]);
   int *vet1 = geraVetor(tam,&min,&max);
   //exibevetor(vet1,tam);
 
-  Balde balde[numThreads-1];
+  Balde balde[numThreads];
 
   int range = (int) ceil((float)(max - min) / (float)(numThreads-1));
 	balde[0].min = min;
@@ -103,41 +103,41 @@ int main(int argc, char const *argv[])
 	balde[0].vet = (int*) malloc(sizeof(int) * tam);
 	balde[0].tam = 0;
 
-     for(i = 1; i < numThreads - 1; ++i) {
-        balde[i].min = balde[i - 1].max + 1;
-        balde[i].max = balde[i].min + range;
-        balde[i].vet = (int*) malloc(sizeof(int) * tam);
-        balde[i].tam = 0;
-    }
-
-  for (i = 0; i < tam; ++i) {
-     for (j = 0; j < numThreads - 1; ++j) {
-	if (vet1[i] <= balde[j].max && vet1[i] >= balde[j].min){
-	    insereNoBalde(&balde[j], vet1[i]);
-	 }
-      }
+  for(i = 1; i < numThreads - 1; ++i) {
+      balde[i].min = balde[i - 1].max + 1;
+      balde[i].max = balde[i].min + range;
+      balde[i].vet = (int*) malloc(sizeof(int) * tam);
+      balde[i].tam = 0;
   }
 
-  #pragma omp parallel for num_threads(numThreads)
-  for (i = 0; i < numThreads; ++i) {
-       insertionSort(balde[i].vet, balde[i].tam);
-  }
-  int *r = (int*) malloc(sizeof(int) * tam);
-  int cont = 0;
-  for (i = 0; i < numThreads; ++i) {
-    for (j = 0; j < balde[i].tam; ++j) {
-	  r[cont++] = balde[i].vet[j];
+  for(i = 0; i < tam; ++i) {
+   for (j = 0; j < numThreads - 1; ++j) {
+    if(vet1[i] <= balde[j].max && vet1[i] >= balde[j].min){
+	     insereNoBalde(&balde[j], vet1[i]);
+	    }
+     }
    }
-}
-	 
- exibevetor(r,tam); 
 
- t = clock(); 
+   #pragma omp parallel for num_threads(numThreads)
+   for (i = 0; i < numThreads; ++i) {
+       insertionSort(balde[i].vet, balde[i].tam);
+   }
+   int *r = (int*) malloc(sizeof(int) * tam);
+   int cont = 0;
+   for (i = 0; i < numThreads; ++i) {
+     for (j = 0; j < balde[i].tam; ++j) {
+	     r[cont++] = balde[i].vet[j];
+    }
+   }
+	 
+   exibevetor(r,tam); 
+
+   t = clock(); 
    
- cpu_time_used = ((double)t)/CLOCKS_PER_SEC;
- printf("\nTempo de execução: %f\n", cpu_time_used);
+   cpu_time_used = ((double)t)/CLOCKS_PER_SEC;
+   printf("\nTempo de execução: %f\n", cpu_time_used);
   
- return 0;
+   return 0;
 }
 
 
