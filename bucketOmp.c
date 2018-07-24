@@ -25,11 +25,11 @@
 
 #define NUMBALDES TAM3/MAX_THREADS
 
-struct Compara{
+/*typedef struct Compara{
     int valor;
     int indice;
-};
-
+}Compara;
+*/
 typedef struct node{
     int elem;
     struct node *prox;
@@ -41,7 +41,6 @@ typedef struct balde{
 
 
 void bucketSort(int *vet,int tam);
-struct Compara procuraMaior(int *vet,int tam);
 
 /* Função utilizada para exibição do vetor */
 void exibevetor(int *vet, int tam){
@@ -136,34 +135,26 @@ void inicializaFila(bucket *balde){
 /* implementação do bucketSort com OpenMP*/
 void bucketSort(int *vet,int tam){
   bucket balde[NUMBALDES]; 
-	int i,j,k,cont;
-	//struct Compara maior;
-  //maior = procuraMaior(vet,tam);
-	//indice = maior.valor;
-
- // printf("Maior valor do vetor: %d \n",indice);
-	 #pragma omp parallel for num_threads(MAX_THREADS) 
-  	 for (i = 0; i < NUMBALDES; ++i){
-          inicializaFila(&balde[i]);
-      }
-     for(i = 0; i < tam; ++i){
-       empilha(&balde[(int)vet[i]*10],vet[i]);
-     }
-
-     int aux[tam];
-     for(i = 0, j = 0; i < NUMBALDES; ++i){
-        k = 0;
-        while(balde[i].inicio != NULL){
-           aux[k++] = desempilha(&balde[i]);
-        }
-        insertionSort(aux,k);
-        for(cont = 0; cont < k && j < tam; ++cont){
-            vet[j++] = aux[cont];
-        }
-     }
-
-  
-    
+  int i,j,k,cont;
+  #pragma omp parallel for num_threads(MAX_THREADS) 
+  for (i = 0; i < NUMBALDES; ++i){
+     inicializaFila(&balde[i]);
+  }
+  for(i = 0; i < tam; ++i){
+     empilha(&balde[(int)vet[i]*10],vet[i]);
+  }
+ 
+  int aux[tam];
+  for(i = 0, j = 0; i < NUMBALDES; ++i){
+     k = 0;
+   while(balde[i].inicio != NULL){
+     aux[k++] = desempilha(&balde[i]);
+   }
+   insertionSort(aux,k);
+  for(cont = 0; cont < k && j < tam; ++cont){
+     vet[j++] = aux[cont];
+   }
+  }    
 }
 
 
