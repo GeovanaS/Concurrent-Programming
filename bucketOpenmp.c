@@ -1,5 +1,5 @@
 /*
-   Arquivo: bucketomp.c
+   Arquivo: bucketOpenmp.c
    
    Objetivo: Implementação do algoritmo de ordenacao Bucket Sort 
    usando OpenMP.
